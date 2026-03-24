@@ -16,7 +16,7 @@ struct PuzzleContainerView: View {
                 .onAppear {
                     let image = UIImage(named: puzzleInfo.imageName)
                         ?? PuzzleCatalog.placeholderImage(for: puzzleInfo.id)
-                    viewModel.startPuzzle(image: image, pieceCount: pieceCount)
+                    viewModel.startPuzzle(image: image, pieceCount: pieceCount, puzzleID: puzzleInfo.id)
                 }
 
             // HUD overlay
@@ -86,9 +86,9 @@ class PuzzleViewModel: ObservableObject {
         scene.puzzleDelegate = self
     }
 
-    func startPuzzle(image: UIImage, pieceCount: Int) {
-        scene.setupPuzzle(image: image, pieceCount: pieceCount)
-        totalCount = pieceCount
+    func startPuzzle(image: UIImage, pieceCount: Int, puzzleID: String = "") {
+        scene.setupPuzzle(image: image, pieceCount: pieceCount, puzzleID: puzzleID)
+        // totalCount will be updated by the delegate with the actual piece count
 
         let startDate = Date()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in

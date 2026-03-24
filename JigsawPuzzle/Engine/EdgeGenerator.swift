@@ -208,7 +208,7 @@ struct SeededRandomNumberGenerator: RandomNumberGenerator {
     private var state: UInt64
 
     init(seed: UInt64) {
-        self.state = seed
+        self.state = seed == 0 ? 1 : seed
     }
 
     mutating func next() -> UInt64 {

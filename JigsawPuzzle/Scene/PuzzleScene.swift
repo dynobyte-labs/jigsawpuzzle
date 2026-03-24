@@ -43,7 +43,7 @@ class PuzzleScene: SKScene {
         setupGestureRecognizers()
     }
 
-    func setupPuzzle(image: UIImage, pieceCount: Int) {
+    func setupPuzzle(image: UIImage, pieceCount: Int, puzzleID: String = "") {
         backgroundColor = SKColor(white: 0.15, alpha: 1.0)
 
         // Setup camera
@@ -51,8 +51,11 @@ class PuzzleScene: SKScene {
         addChild(cameraNode)
         cameraNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
 
-        // Cut the puzzle
-        let seed = UInt64(Date().timeIntervalSince1970)
+        // Cut the puzzle — deterministic seed from puzzle ID + piece count
+        let seedString = "\(puzzleID)_\(pieceCount)"
+        var hasher = Hasher()
+        hasher.combine(seedString)
+        let seed = UInt64(bitPattern: Int64(hasher.finalize()))
         let pieces = PuzzleCutter.cut(image: image, requestedPieceCount: pieceCount, seed: seed)
         totalPieces = pieces.count
 
@@ -116,9 +119,22 @@ class PuzzleScene: SKScene {
         if unlockedGroups.count == 1 {
             let group = unlockedGroups[0]
             if group.pieces.count == totalPieces {
-                group.lockToBoard()
-                triggerVictory()
-                return
+                // Verify the group is near the correct board position
+                // Check any piece's world position against its correct position
+                if let anyPiece = group.pieces.first {
+                    let worldPos = anyPiece.convert(.zero, to: self)
+                    let pieceSize = anyPiece.size
+                    let threshold = max(pieceSize.width, pieceSize.height) * 0.3
+                    let distance = sqrt(
+                        pow(worldPos.x - anyPiece.correctPosition.x, 2) +
+                        pow(worldPos.y - anyPiece.correctPosition.y, 2)
+                    )
+                    if distance < threshold {
+                        group.lockToBoard()
+                        triggerVictory()
+                        return
+                    }
+                }
             }
         }
     }
@@ -278,8 +294,7 @@ class PuzzleScene: SKScene {
                 placed += group.pieces.count
             }
         }
-        let connectedCount = allGroups.filter { $0.pieces.count > 1 }.reduce(0) { $0 + $1.pieces.count }
-        puzzleDelegate?.puzzleScene(self, didUpdateProgress: max(placed, connectedCount), of: totalPieces)
+        puzzleDelegate?.puzzleScene(self, didUpdateProgress: placed, of: totalPieces)
     }
 
     // MARK: - Haptics
@@ -419,14 +434,20 @@ extension PuzzleScene {
 
         switch gesture.state {
         case .changed:
-            let rotationDelta = -gesture.rotation * 180 / .pi
-            for piece in group.pieces {
-                piece.rotationDegrees += rotationDelta
-            }
+            // Rotate the group node itself so all pieces maintain their relative positions
+            group.zRotation -= gesture.rotation
             gesture.rotation = 0
         case .ended:
+            // Snap group rotation to nearest 90 degrees
+            let currentDegrees = group.zRotation * 180 / .pi
+            let nearest90 = (currentDegrees / 90).rounded() * 90
+            let targetRadians = nearest90 * .pi / 180
+            let snapAction = SKAction.rotate(toAngle: targetRadians, duration: 0.2, shortestUnitArc: true)
+            snapAction.timingMode = .easeOut
+            group.run(snapAction)
+            // Update piece rotation tracking to match group rotation
             for piece in group.pieces {
-                piece.snapRotation()
+                piece.rotationDegrees = nearest90
             }
         default:
             break
@@ -443,9 +464,15 @@ extension PuzzleScene {
             if let piece = node as? PuzzlePieceNode,
                let group = piece.parent as? PieceGroupNode,
                !group.isLockedToBoard {
+                // Rotate the group node 90 degrees clockwise
+                let currentDegrees = group.zRotation * 180 / .pi
+                let targetDegrees = currentDegrees - 90
+                let targetRadians = targetDegrees * .pi / 180
+                let rotateAction = SKAction.rotate(toAngle: targetRadians, duration: 0.15, shortestUnitArc: true)
+                rotateAction.timingMode = .easeOut
+                group.run(rotateAction)
                 for p in group.pieces {
                     p.rotationDegrees += 90
-                    p.snapRotation()
                 }
                 generateHaptic(style: .light)
                 return
