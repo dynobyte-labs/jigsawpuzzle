@@ -33,11 +33,11 @@ final class TextureClipperTests: XCTestCase {
 
     func testClipWithTabPath() {
         let testImage = createTestImage(width: 400, height: 400, color: .green)
-        let edgeGen = EdgeGenerator(rows: 3, cols: 3, seed: 42)
+        var edgeGen = EdgeGenerator(rows: 3, cols: 3, seed: 42)
         let pieceSize = CGSize(width: 100, height: 100)
         let edges = PieceEdges(top: .flat, right: .tab, bottom: .flat, left: .flat)
 
-        let piecePath = PathAssembler.assemblePath(for: edges, pieceSize: pieceSize, edgeGenerator: edgeGen)
+        let piecePath = PathAssembler.assemblePath(for: edges, pieceSize: pieceSize, edgeGenerator: &edgeGen)
 
         let result = TextureClipper.clip(
             image: testImage,

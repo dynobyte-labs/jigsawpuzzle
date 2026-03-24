@@ -63,11 +63,16 @@ class PuzzlePieceNode: SKSpriteNode {
         run(scaleUp, withKey: "lift")
         zPosition = 1000
 
-        // Add shadow
-        let shadow = SKShapeNode(rectOf: CGSize(width: size.width * 0.95, height: size.height * 0.95), cornerRadius: 4)
+        // Add shadow matching the piece's bezier path
+        let pathBounds = piecePath.boundingBoxOfPath
+        let shadow = SKShapeNode(path: piecePath)
         shadow.fillColor = SKColor.black.withAlphaComponent(0.3)
         shadow.strokeColor = .clear
-        shadow.position = CGPoint(x: 4, y: -4)
+        // Offset shadow down-right, adjust for path origin
+        shadow.position = CGPoint(
+            x: 4 - pathBounds.midX + size.width * 0.5,
+            y: -4 - pathBounds.midY + size.height * 0.5
+        )
         shadow.zPosition = -1
         shadow.name = "shadow"
         addChild(shadow)

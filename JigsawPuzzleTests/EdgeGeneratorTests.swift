@@ -100,17 +100,35 @@ final class EdgeGeneratorTests: XCTestCase {
     }
 
     func testBezierPathGeneration() {
-        let generator = EdgeGenerator(rows: 3, cols: 3, seed: 42)
+        var generator = EdgeGenerator(rows: 3, cols: 3, seed: 42)
         let path = generator.bezierPath(for: .tab, alongEdge: .right, pieceSize: CGSize(width: 100, height: 100))
         XCTAssertFalse(path.isEmpty, "Bezier path should not be empty")
     }
 
     func testSocketPathIsInverse() {
-        let generator = EdgeGenerator(rows: 3, cols: 3, seed: 42)
+        var generator = EdgeGenerator(rows: 3, cols: 3, seed: 42)
         let tabBounds = generator.bezierPath(for: .tab, alongEdge: .right, pieceSize: CGSize(width: 100, height: 100)).boundingBoxOfPath
-        let socketBounds = generator.bezierPath(for: .socket, alongEdge: .right, pieceSize: CGSize(width: 100, height: 100)).boundingBoxOfPath
+        var generator2 = EdgeGenerator(rows: 3, cols: 3, seed: 42)
+        let socketBounds = generator2.bezierPath(for: .socket, alongEdge: .right, pieceSize: CGSize(width: 100, height: 100)).boundingBoxOfPath
 
         XCTAssertGreaterThan(tabBounds.width, 0)
         XCTAssertGreaterThan(socketBounds.width, 0)
+    }
+
+    func testRandomizedParamsVaryBetweenEdges() {
+        var gen1 = EdgeGenerator(rows: 3, cols: 3, seed: 42)
+        let path1 = gen1.bezierPath(for: .tab, alongEdge: .right, pieceSize: CGSize(width: 100, height: 100))
+        let path2 = gen1.bezierPath(for: .tab, alongEdge: .right, pieceSize: CGSize(width: 100, height: 100))
+
+        // Different calls should produce different bezier shapes due to randomized params
+        let bounds1 = path1.boundingBoxOfPath
+        let bounds2 = path2.boundingBoxOfPath
+        // At minimum both should be valid non-empty paths
+        XCTAssertGreaterThan(bounds1.width, 0)
+        XCTAssertGreaterThan(bounds2.width, 0)
+        // Bounds should differ since params are randomized
+        let widthsDiffer = abs(bounds1.width - bounds2.width) > 0.01
+        let heightsDiffer = abs(bounds1.height - bounds2.height) > 0.01
+        XCTAssertTrue(widthsDiffer || heightsDiffer, "Randomized params should produce varying shapes")
     }
 }

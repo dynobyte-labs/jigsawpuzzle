@@ -61,7 +61,7 @@ struct PuzzleCutter {
                 let path = PathAssembler.assemblePath(
                     for: edges,
                     pieceSize: pieceSize,
-                    edgeGenerator: edgeGen
+                    edgeGenerator: &edgeGen
                 )
 
                 // Source rect in the original image

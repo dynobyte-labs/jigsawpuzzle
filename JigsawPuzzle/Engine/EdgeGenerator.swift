@@ -58,16 +58,17 @@ struct EdgeGenerator {
 
     /// Generate a bezier CGPath for a tab or socket along the given edge of a piece.
     /// The path starts at the edge's start point and ends at the edge's end point.
-    /// For .flat, returns a straight line.
-    func bezierPath(for edgeType: EdgeType, alongEdge edge: Edge, pieceSize: CGSize) -> CGPath {
+    /// Parameters are randomized per call using the seeded RNG for natural-looking variation.
+    mutating func bezierPath(for edgeType: EdgeType, alongEdge edge: Edge, pieceSize: CGSize) -> CGPath {
         let path = CGMutablePath()
         let w = pieceSize.width
         let h = pieceSize.height
 
-        // Tab parameters
-        let tabHeight: CGFloat = 0.2  // proportion of piece size
-        let tabWidth: CGFloat = 0.3   // proportion of edge length
-        let neckWidth: CGFloat = 0.2  // proportion of edge length
+        // Randomized tab parameters — vary within visually pleasing ranges
+        let tabHeight: CGFloat = randomInRange(min: 0.15, max: 0.25)   // proportion of piece size
+        let tabWidth: CGFloat = randomInRange(min: 0.25, max: 0.35)    // proportion of edge length
+        let neckWidth: CGFloat = randomInRange(min: 0.15, max: 0.25)   // proportion of edge length
+        let curvature: CGFloat = randomInRange(min: 1.0, max: 1.4)     // bulge roundness multiplier
 
         switch edge {
         case .right:
@@ -92,8 +93,8 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: edgeX + tabH, y: bulgeEnd),
-                control1: CGPoint(x: edgeX + tabH * 1.2, y: bulgeStart + edgeLen * 0.05),
-                control2: CGPoint(x: edgeX + tabH * 1.2, y: bulgeEnd - edgeLen * 0.05)
+                control1: CGPoint(x: edgeX + tabH * curvature, y: bulgeStart + edgeLen * 0.05),
+                control2: CGPoint(x: edgeX + tabH * curvature, y: bulgeEnd - edgeLen * 0.05)
             )
             path.addCurve(
                 to: CGPoint(x: edgeX, y: neckEnd),
@@ -124,8 +125,8 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: edgeX + tabH, y: bulgeEnd),
-                control1: CGPoint(x: edgeX + tabH * 1.2, y: bulgeStart - edgeLen * 0.05),
-                control2: CGPoint(x: edgeX + tabH * 1.2, y: bulgeEnd + edgeLen * 0.05)
+                control1: CGPoint(x: edgeX + tabH * curvature, y: bulgeStart - edgeLen * 0.05),
+                control2: CGPoint(x: edgeX + tabH * curvature, y: bulgeEnd + edgeLen * 0.05)
             )
             path.addCurve(
                 to: CGPoint(x: edgeX, y: neckEnd),
@@ -156,8 +157,8 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: bulgeEnd, y: edgeY + tabH),
-                control1: CGPoint(x: bulgeStart + edgeLen * 0.05, y: edgeY + tabH * 1.2),
-                control2: CGPoint(x: bulgeEnd - edgeLen * 0.05, y: edgeY + tabH * 1.2)
+                control1: CGPoint(x: bulgeStart + edgeLen * 0.05, y: edgeY + tabH * curvature),
+                control2: CGPoint(x: bulgeEnd - edgeLen * 0.05, y: edgeY + tabH * curvature)
             )
             path.addCurve(
                 to: CGPoint(x: neckEnd, y: edgeY),
@@ -188,8 +189,8 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: bulgeEnd, y: edgeY + tabH),
-                control1: CGPoint(x: bulgeStart - edgeLen * 0.05, y: edgeY + tabH * 1.2),
-                control2: CGPoint(x: bulgeEnd + edgeLen * 0.05, y: edgeY + tabH * 1.2)
+                control1: CGPoint(x: bulgeStart - edgeLen * 0.05, y: edgeY + tabH * curvature),
+                control2: CGPoint(x: bulgeEnd + edgeLen * 0.05, y: edgeY + tabH * curvature)
             )
             path.addCurve(
                 to: CGPoint(x: neckEnd, y: edgeY),
@@ -200,6 +201,12 @@ struct EdgeGenerator {
         }
 
         return path
+    }
+
+    /// Generate a random CGFloat in the given range using the seeded RNG.
+    private mutating func randomInRange(min: CGFloat, max: CGFloat) -> CGFloat {
+        let raw = CGFloat(rng.next() % 10000) / 10000.0  // 0.0 ..< 1.0
+        return min + raw * (max - min)
     }
 }
 

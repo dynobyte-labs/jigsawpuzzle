@@ -47,11 +47,14 @@ struct TextureClipper {
             // UIKit draws with flipped Y, UIGraphicsImageRenderer handles this
             UIImage(cgImage: cgImage).draw(in: drawRect)
 
-            // Draw edge stroke for visual definition
+            // Draw edge stroke with drop shadow for depth
+            context.saveGState()
+            context.setShadow(offset: CGSize(width: 1, height: -1), blur: 3, color: UIColor.black.withAlphaComponent(0.4).cgColor)
             context.addPath(path)
             context.setStrokeColor(UIColor.black.withAlphaComponent(0.3).cgColor)
             context.setLineWidth(1.5)
             context.strokePath()
+            context.restoreGState()
         }
     }
 }

@@ -4,10 +4,11 @@ struct PathAssembler {
 
     /// Assemble a closed CGPath for a puzzle piece from its four edges.
     /// Path is constructed clockwise: top -> right -> bottom -> left.
+    /// EdgeGenerator is inout because bezierPath uses the seeded RNG for randomized params.
     static func assemblePath(
         for edges: PieceEdges,
         pieceSize: CGSize,
-        edgeGenerator: EdgeGenerator
+        edgeGenerator: inout EdgeGenerator
     ) -> CGPath {
         let path = CGMutablePath()
 
