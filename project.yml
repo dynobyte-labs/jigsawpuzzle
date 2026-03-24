@@ -1,0 +1,35 @@
+name: JigsawPuzzle
+options:
+  bundleIdPrefix: com.jigsawpuzzle
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
+targets:
+  JigsawPuzzle:
+    type: application
+    platform: iOS
+    sources:
+      - JigsawPuzzle
+    settings:
+      base:
+        INFOPLIST_FILE: JigsawPuzzle/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.jigsawpuzzle.app
+        TARGETED_DEVICE_FAMILY: "1,2"
+    dependencies: []
+
+  JigsawPuzzleTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - JigsawPuzzleTests
+    dependencies:
+      - target: JigsawPuzzle
+    settings:
+      base:
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/JigsawPuzzle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JigsawPuzzle"
