@@ -5,6 +5,14 @@ struct EdgeGenerator {
     let cols: Int
     private var rng: SeededRandomNumberGenerator
 
+    /// Randomized bezier parameters for one edge curve.
+    struct EdgeParams {
+        let tabHeight: CGFloat   // proportion of perpendicular piece dimension
+        let tabWidth: CGFloat    // proportion of edge length
+        let neckWidth: CGFloat   // proportion of edge length
+        let curvature: CGFloat   // bulge roundness multiplier
+    }
+
     init(rows: Int, cols: Int, seed: UInt64) {
         self.rows = rows
         self.cols = cols
@@ -15,7 +23,6 @@ struct EdgeGenerator {
     /// Returns a 2D array [row][col] of PieceEdges.
     mutating func generateAllEdges() -> [[PieceEdges]] {
         // Horizontal edges: between [row][col] right and [row][col+1] left
-        // Store as the "right" edge of the left piece (tab or socket)
         var horizontalEdges: [[EdgeType]] = Array(
             repeating: Array(repeating: EdgeType.flat, count: cols - 1),
             count: rows
@@ -27,7 +34,6 @@ struct EdgeGenerator {
         }
 
         // Vertical edges: between [row][col] bottom and [row+1][col] top
-        // Store as the "bottom" edge of the top piece
         var verticalEdges: [[EdgeType]] = Array(
             repeating: Array(repeating: EdgeType.flat, count: cols),
             count: rows - 1
@@ -56,35 +62,75 @@ struct EdgeGenerator {
         return result
     }
 
-    /// Generate a bezier CGPath for a tab or socket along the given edge of a piece.
-    /// The path starts at the edge's start point and ends at the edge's end point.
-    /// Parameters are randomized per call using the seeded RNG for natural-looking variation.
-    mutating func bezierPath(for edgeType: EdgeType, alongEdge edge: Edge, pieceSize: CGSize) -> CGPath {
-        let path = CGMutablePath()
+    /// Generate randomized bezier parameters for a single edge.
+    mutating func generateEdgeParams() -> EdgeParams {
+        EdgeParams(
+            tabHeight: randomInRange(min: 0.15, max: 0.25),
+            tabWidth: randomInRange(min: 0.25, max: 0.35),
+            neckWidth: randomInRange(min: 0.15, max: 0.25),
+            curvature: randomInRange(min: 1.0, max: 1.4)
+        )
+    }
+
+    /// Pre-generate EdgeParams for all grid edges.
+    /// horizontal[row][col] = params for edge between pieces (row,col) and (row,col+1).
+    /// vertical[row][col] = params for edge between pieces (row,col) and (row+1,col).
+    mutating func generateAllEdgeParams() -> (horizontal: [[EdgeParams]], vertical: [[EdgeParams]]) {
+        var horizontal: [[EdgeParams]] = []
+        for _ in 0..<rows {
+            var row: [EdgeParams] = []
+            for _ in 0..<(cols - 1) {
+                row.append(generateEdgeParams())
+            }
+            horizontal.append(row)
+        }
+
+        var vertical: [[EdgeParams]] = []
+        for _ in 0..<(rows - 1) {
+            var row: [EdgeParams] = []
+            for _ in 0..<cols {
+                row.append(generateEdgeParams())
+            }
+            vertical.append(row)
+        }
+
+        return (horizontal, vertical)
+    }
+
+    /// Add a bezier edge curve to an existing path (continues from current point, no initial move).
+    /// For flat edges, draws a straight line to the endpoint.
+    static func addEdgePath(
+        to path: CGMutablePath,
+        for edgeType: EdgeType,
+        alongEdge edge: Edge,
+        pieceSize: CGSize,
+        params: EdgeParams
+    ) {
         let w = pieceSize.width
         let h = pieceSize.height
 
-        // Randomized tab parameters — vary within visually pleasing ranges
-        let tabHeight: CGFloat = randomInRange(min: 0.15, max: 0.25)   // proportion of piece size
-        let tabWidth: CGFloat = randomInRange(min: 0.25, max: 0.35)    // proportion of edge length
-        let neckWidth: CGFloat = randomInRange(min: 0.15, max: 0.25)   // proportion of edge length
-        let curvature: CGFloat = randomInRange(min: 1.0, max: 1.4)     // bulge roundness multiplier
+        // Flat edges: straight line to endpoint
+        if edgeType == .flat {
+            switch edge {
+            case .top:    path.addLine(to: CGPoint(x: w, y: 0))
+            case .right:  path.addLine(to: CGPoint(x: w, y: h))
+            case .bottom: path.addLine(to: CGPoint(x: 0, y: h))
+            case .left:   path.addLine(to: CGPoint(x: 0, y: 0))
+            }
+            return
+        }
 
         switch edge {
         case .right:
-            let startY: CGFloat = 0
-            let endY: CGFloat = h
             let edgeX: CGFloat = w
             let edgeLen = h
             let direction: CGFloat = edgeType == .tab ? 1 : -1
+            let tabH = w * params.tabHeight * direction
+            let neckStart = edgeLen * (0.5 - params.neckWidth / 2)
+            let neckEnd = edgeLen * (0.5 + params.neckWidth / 2)
+            let bulgeStart = edgeLen * (0.5 - params.tabWidth / 2)
+            let bulgeEnd = edgeLen * (0.5 + params.tabWidth / 2)
 
-            let tabH = w * tabHeight * direction
-            let neckStart = edgeLen * (0.5 - neckWidth / 2)
-            let neckEnd = edgeLen * (0.5 + neckWidth / 2)
-            let bulgeStart = edgeLen * (0.5 - tabWidth / 2)
-            let bulgeEnd = edgeLen * (0.5 + tabWidth / 2)
-
-            path.move(to: CGPoint(x: edgeX, y: startY))
             path.addLine(to: CGPoint(x: edgeX, y: neckStart))
             path.addCurve(
                 to: CGPoint(x: edgeX + tabH, y: bulgeStart),
@@ -93,30 +139,26 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: edgeX + tabH, y: bulgeEnd),
-                control1: CGPoint(x: edgeX + tabH * curvature, y: bulgeStart + edgeLen * 0.05),
-                control2: CGPoint(x: edgeX + tabH * curvature, y: bulgeEnd - edgeLen * 0.05)
+                control1: CGPoint(x: edgeX + tabH * params.curvature, y: bulgeStart + edgeLen * 0.05),
+                control2: CGPoint(x: edgeX + tabH * params.curvature, y: bulgeEnd - edgeLen * 0.05)
             )
             path.addCurve(
                 to: CGPoint(x: edgeX, y: neckEnd),
                 control1: CGPoint(x: edgeX + tabH, y: bulgeEnd + edgeLen * 0.02),
                 control2: CGPoint(x: edgeX, y: neckEnd - edgeLen * 0.02)
             )
-            path.addLine(to: CGPoint(x: edgeX, y: endY))
+            path.addLine(to: CGPoint(x: edgeX, y: h))
 
         case .left:
-            let startY: CGFloat = h
-            let endY: CGFloat = 0
             let edgeX: CGFloat = 0
             let edgeLen = h
             let direction: CGFloat = edgeType == .tab ? -1 : 1
+            let tabH = w * params.tabHeight * direction
+            let neckStart = edgeLen * (0.5 + params.neckWidth / 2)
+            let neckEnd = edgeLen * (0.5 - params.neckWidth / 2)
+            let bulgeStart = edgeLen * (0.5 + params.tabWidth / 2)
+            let bulgeEnd = edgeLen * (0.5 - params.tabWidth / 2)
 
-            let tabH = w * tabHeight * direction
-            let neckStart = edgeLen * (0.5 + neckWidth / 2)
-            let neckEnd = edgeLen * (0.5 - neckWidth / 2)
-            let bulgeStart = edgeLen * (0.5 + tabWidth / 2)
-            let bulgeEnd = edgeLen * (0.5 - tabWidth / 2)
-
-            path.move(to: CGPoint(x: edgeX, y: startY))
             path.addLine(to: CGPoint(x: edgeX, y: neckStart))
             path.addCurve(
                 to: CGPoint(x: edgeX + tabH, y: bulgeStart),
@@ -125,30 +167,26 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: edgeX + tabH, y: bulgeEnd),
-                control1: CGPoint(x: edgeX + tabH * curvature, y: bulgeStart - edgeLen * 0.05),
-                control2: CGPoint(x: edgeX + tabH * curvature, y: bulgeEnd + edgeLen * 0.05)
+                control1: CGPoint(x: edgeX + tabH * params.curvature, y: bulgeStart - edgeLen * 0.05),
+                control2: CGPoint(x: edgeX + tabH * params.curvature, y: bulgeEnd + edgeLen * 0.05)
             )
             path.addCurve(
                 to: CGPoint(x: edgeX, y: neckEnd),
                 control1: CGPoint(x: edgeX + tabH, y: bulgeEnd - edgeLen * 0.02),
                 control2: CGPoint(x: edgeX, y: neckEnd + edgeLen * 0.02)
             )
-            path.addLine(to: CGPoint(x: edgeX, y: endY))
+            path.addLine(to: CGPoint(x: edgeX, y: 0))
 
         case .top:
-            let startX: CGFloat = 0
-            let endX: CGFloat = w
             let edgeY: CGFloat = 0
             let edgeLen = w
             let direction: CGFloat = edgeType == .tab ? -1 : 1
+            let tabH = h * params.tabHeight * direction
+            let neckStart = edgeLen * (0.5 - params.neckWidth / 2)
+            let neckEnd = edgeLen * (0.5 + params.neckWidth / 2)
+            let bulgeStart = edgeLen * (0.5 - params.tabWidth / 2)
+            let bulgeEnd = edgeLen * (0.5 + params.tabWidth / 2)
 
-            let tabH = h * tabHeight * direction
-            let neckStart = edgeLen * (0.5 - neckWidth / 2)
-            let neckEnd = edgeLen * (0.5 + neckWidth / 2)
-            let bulgeStart = edgeLen * (0.5 - tabWidth / 2)
-            let bulgeEnd = edgeLen * (0.5 + tabWidth / 2)
-
-            path.move(to: CGPoint(x: startX, y: edgeY))
             path.addLine(to: CGPoint(x: neckStart, y: edgeY))
             path.addCurve(
                 to: CGPoint(x: bulgeStart, y: edgeY + tabH),
@@ -157,30 +195,26 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: bulgeEnd, y: edgeY + tabH),
-                control1: CGPoint(x: bulgeStart + edgeLen * 0.05, y: edgeY + tabH * curvature),
-                control2: CGPoint(x: bulgeEnd - edgeLen * 0.05, y: edgeY + tabH * curvature)
+                control1: CGPoint(x: bulgeStart + edgeLen * 0.05, y: edgeY + tabH * params.curvature),
+                control2: CGPoint(x: bulgeEnd - edgeLen * 0.05, y: edgeY + tabH * params.curvature)
             )
             path.addCurve(
                 to: CGPoint(x: neckEnd, y: edgeY),
                 control1: CGPoint(x: bulgeEnd + edgeLen * 0.02, y: edgeY + tabH),
                 control2: CGPoint(x: neckEnd - edgeLen * 0.02, y: edgeY)
             )
-            path.addLine(to: CGPoint(x: endX, y: edgeY))
+            path.addLine(to: CGPoint(x: w, y: edgeY))
 
         case .bottom:
-            let startX: CGFloat = w
-            let endX: CGFloat = 0
             let edgeY: CGFloat = h
             let edgeLen = w
             let direction: CGFloat = edgeType == .tab ? 1 : -1
+            let tabH = h * params.tabHeight * direction
+            let neckStart = edgeLen * (0.5 + params.neckWidth / 2)
+            let neckEnd = edgeLen * (0.5 - params.neckWidth / 2)
+            let bulgeStart = edgeLen * (0.5 + params.tabWidth / 2)
+            let bulgeEnd = edgeLen * (0.5 - params.tabWidth / 2)
 
-            let tabH = h * tabHeight * direction
-            let neckStart = edgeLen * (0.5 + neckWidth / 2)
-            let neckEnd = edgeLen * (0.5 - neckWidth / 2)
-            let bulgeStart = edgeLen * (0.5 + tabWidth / 2)
-            let bulgeEnd = edgeLen * (0.5 - tabWidth / 2)
-
-            path.move(to: CGPoint(x: startX, y: edgeY))
             path.addLine(to: CGPoint(x: neckStart, y: edgeY))
             path.addCurve(
                 to: CGPoint(x: bulgeStart, y: edgeY + tabH),
@@ -189,17 +223,34 @@ struct EdgeGenerator {
             )
             path.addCurve(
                 to: CGPoint(x: bulgeEnd, y: edgeY + tabH),
-                control1: CGPoint(x: bulgeStart - edgeLen * 0.05, y: edgeY + tabH * curvature),
-                control2: CGPoint(x: bulgeEnd + edgeLen * 0.05, y: edgeY + tabH * curvature)
+                control1: CGPoint(x: bulgeStart - edgeLen * 0.05, y: edgeY + tabH * params.curvature),
+                control2: CGPoint(x: bulgeEnd + edgeLen * 0.05, y: edgeY + tabH * params.curvature)
             )
             path.addCurve(
                 to: CGPoint(x: neckEnd, y: edgeY),
                 control1: CGPoint(x: bulgeEnd - edgeLen * 0.02, y: edgeY + tabH),
                 control2: CGPoint(x: neckEnd + edgeLen * 0.02, y: edgeY)
             )
-            path.addLine(to: CGPoint(x: endX, y: edgeY))
+            path.addLine(to: CGPoint(x: 0, y: edgeY))
+        }
+    }
+
+    /// Generate a standalone bezier CGPath for a single edge (with initial move).
+    /// Used by tests; production code uses addEdgePath via PathAssembler.
+    mutating func bezierPath(for edgeType: EdgeType, alongEdge edge: Edge, pieceSize: CGSize) -> CGPath {
+        let path = CGMutablePath()
+        let params = generateEdgeParams()
+        let w = pieceSize.width
+        let h = pieceSize.height
+
+        switch edge {
+        case .top:    path.move(to: CGPoint(x: 0, y: 0))
+        case .right:  path.move(to: CGPoint(x: w, y: 0))
+        case .bottom: path.move(to: CGPoint(x: w, y: h))
+        case .left:   path.move(to: CGPoint(x: 0, y: h))
         }
 
+        EdgeGenerator.addEdgePath(to: path, for: edgeType, alongEdge: edge, pieceSize: pieceSize, params: params)
         return path
     }
 

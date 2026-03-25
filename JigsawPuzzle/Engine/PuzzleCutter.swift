@@ -26,10 +26,14 @@ struct PuzzleCutter {
 
         var edgeGen = EdgeGenerator(rows: rows, cols: cols, seed: seed)
         let allEdges = edgeGen.generateAllEdges()
+        let allParams = edgeGen.generateAllEdgeParams()
 
         let pieceWidth = image.size.width / CGFloat(cols)
         let pieceHeight = image.size.height / CGFloat(rows)
         let pieceSize = CGSize(width: pieceWidth, height: pieceHeight)
+
+        // Dummy params for flat (border) edges — values unused since flat draws a straight line
+        let flatParams = EdgeGenerator.EdgeParams(tabHeight: 0, tabWidth: 0, neckWidth: 0, curvature: 0)
 
         // Build ID map: row,col -> PieceID
         var idMap: [[PieceID]] = []
@@ -57,11 +61,20 @@ struct PuzzleCutter {
                 if col > 0 { neighbors[.left] = idMap[row][col - 1] }
                 if col < cols - 1 { neighbors[.right] = idMap[row][col + 1] }
 
-                // Assemble path
+                // Look up pre-generated params for shared edges
+                let topParams = row > 0 ? allParams.vertical[row - 1][col] : flatParams
+                let bottomParams = row < rows - 1 ? allParams.vertical[row][col] : flatParams
+                let leftParams = col > 0 ? allParams.horizontal[row][col - 1] : flatParams
+                let rightParams = col < cols - 1 ? allParams.horizontal[row][col] : flatParams
+
+                // Assemble path with shared params
                 let path = PathAssembler.assemblePath(
                     for: edges,
                     pieceSize: pieceSize,
-                    edgeGenerator: &edgeGen
+                    topParams: topParams,
+                    rightParams: rightParams,
+                    bottomParams: bottomParams,
+                    leftParams: leftParams
                 )
 
                 // Source rect in the original image
@@ -81,10 +94,10 @@ struct PuzzleCutter {
 
                 let pathBounds = path.boundingBoxOfPath
 
-                // Correct position = center of where this piece belongs
+                // Correct position in SpriteKit coordinates (Y-up: flip from image Y-down)
                 let correctPosition = CGPoint(
                     x: sourceRect.midX,
-                    y: sourceRect.midY
+                    y: image.size.height - sourceRect.midY
                 )
 
                 pieces.append(CutPiece(

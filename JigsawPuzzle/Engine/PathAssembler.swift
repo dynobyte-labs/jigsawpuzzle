@@ -4,30 +4,31 @@ struct PathAssembler {
 
     /// Assemble a closed CGPath for a puzzle piece from its four edges.
     /// Path is constructed clockwise: top -> right -> bottom -> left.
-    /// EdgeGenerator is inout because bezierPath uses the seeded RNG for randomized params.
+    /// Each edge uses pre-generated params so adjacent pieces share identical curves.
     static func assemblePath(
         for edges: PieceEdges,
         pieceSize: CGSize,
-        edgeGenerator: inout EdgeGenerator
+        topParams: EdgeGenerator.EdgeParams,
+        rightParams: EdgeGenerator.EdgeParams,
+        bottomParams: EdgeGenerator.EdgeParams,
+        leftParams: EdgeGenerator.EdgeParams
     ) -> CGPath {
         let path = CGMutablePath()
 
         // Start at top-left corner (0, 0)
+        path.move(to: CGPoint(x: 0, y: 0))
+
         // Top edge: left to right
-        let topPath = edgeGenerator.bezierPath(for: edges.top, alongEdge: .top, pieceSize: pieceSize)
-        path.addPath(topPath)
+        EdgeGenerator.addEdgePath(to: path, for: edges.top, alongEdge: .top, pieceSize: pieceSize, params: topParams)
 
         // Right edge: top to bottom
-        let rightPath = edgeGenerator.bezierPath(for: edges.right, alongEdge: .right, pieceSize: pieceSize)
-        path.addPath(rightPath)
+        EdgeGenerator.addEdgePath(to: path, for: edges.right, alongEdge: .right, pieceSize: pieceSize, params: rightParams)
 
         // Bottom edge: right to left
-        let bottomPath = edgeGenerator.bezierPath(for: edges.bottom, alongEdge: .bottom, pieceSize: pieceSize)
-        path.addPath(bottomPath)
+        EdgeGenerator.addEdgePath(to: path, for: edges.bottom, alongEdge: .bottom, pieceSize: pieceSize, params: bottomParams)
 
         // Left edge: bottom to top
-        let leftPath = edgeGenerator.bezierPath(for: edges.left, alongEdge: .left, pieceSize: pieceSize)
-        path.addPath(leftPath)
+        EdgeGenerator.addEdgePath(to: path, for: edges.left, alongEdge: .left, pieceSize: pieceSize, params: leftParams)
 
         path.closeSubpath()
         return path
