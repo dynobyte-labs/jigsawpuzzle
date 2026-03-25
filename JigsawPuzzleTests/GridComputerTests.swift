@@ -9,8 +9,8 @@ final class GridComputerTests: XCTestCase {
             imageWidth: 1000,
             imageHeight: 1000
         )
-        XCTAssertEqual(rows * cols, 49, "Should pick closest grid to 48 for square image")
-        // 7x7=49 is closest to 48 for a 1:1 ratio
+        XCTAssertEqual(rows * cols, 48, "Should pick closest grid to 48 for square image")
+        // 6x8=48 is an exact fit even for a 1:1 ratio
     }
 
     func testLandscapeImageWith48Pieces() {

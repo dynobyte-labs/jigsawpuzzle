@@ -122,7 +122,7 @@ class PuzzleScene: SKScene {
                 // Verify the group is near the correct board position
                 // Check any piece's world position against its correct position
                 if let anyPiece = group.pieces.first {
-                    let worldPos = anyPiece.convert(.zero, to: self)
+                    let worldPos = anyPiece.convert(CGPoint.zero, to: self)
                     let pieceSize = anyPiece.size
                     let threshold = max(pieceSize.width, pieceSize.height) * 0.3
                     let distance = sqrt(
@@ -181,7 +181,7 @@ class PuzzleScene: SKScene {
         emitter.particleSpeedRange = 150
         emitter.yAcceleration = -300
         emitter.particleSize = CGSize(width: 8, height: 8)
-        emitter.particleSizeRange = CGSize(width: 4, height: 4)
+        emitter.particleScaleRange = 0.5
         emitter.particleColorBlendFactor = 1.0
         emitter.particleColorSequence = nil
         emitter.particleColor = .systemYellow
@@ -202,7 +202,7 @@ class PuzzleScene: SKScene {
 
         // Check board lock first (for each piece in group)
         for piece in group.pieces {
-            let worldPos = piece.convert(.zero, to: self)
+            let worldPos = piece.convert(CGPoint.zero, to: self)
             if snapManager.shouldBoardLock(
                 piecePosition: worldPos,
                 correctPosition: piece.correctPosition,
@@ -229,8 +229,8 @@ class PuzzleScene: SKScene {
                   let neighborGroup = groupMap[neighborID],
                   neighborGroup !== group else { continue }
 
-            let pieceWorldPos = piece.convert(.zero, to: self)
-            let neighborWorldPos = neighborPiece.convert(.zero, to: self)
+            let pieceWorldPos = piece.convert(CGPoint.zero, to: self)
+            let neighborWorldPos = neighborPiece.convert(CGPoint.zero, to: self)
 
             // Calculate where the piece SHOULD be relative to neighbor
             let targetOffset = targetOffsetForEdge(edge, pieceSize: pieceSize)
@@ -253,7 +253,7 @@ class PuzzleScene: SKScene {
                 )
 
                 let snapAction = SKAction.moveBy(x: moveOffset.x, y: moveOffset.y, duration: 0.15)
-                snapAction.timingMode = .easeOut
+                snapAction.timingMode = SKActionTimingMode.easeOut
                 group.run(snapAction) {
                     if group.pieces.count >= neighborGroup.pieces.count {
                         group.merge(otherGroup: neighborGroup)
