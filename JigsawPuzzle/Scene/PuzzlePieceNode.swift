@@ -9,6 +9,14 @@ class PuzzlePieceNode: SKSpriteNode {
     let neighbors: [Edge: PieceID]
     let piecePath: CGPath
 
+    /// The uniform grid cell size (without tab/socket extensions)
+    let gridCellSize: CGSize
+
+    /// The grid cell center in this node's local coordinate system.
+    /// Due to asymmetric tab/socket extensions, the node's anchor (0,0) is at the
+    /// bounding box center, which differs from the grid cell center.
+    let gridCenterLocal: CGPoint
+
     /// Current rotation in degrees (0, 90, 180, 270 after snap-assist)
     var rotationDegrees: CGFloat = 0 {
         didSet { zRotation = rotationDegrees * .pi / 180 }
@@ -25,6 +33,25 @@ class PuzzlePieceNode: SKSpriteNode {
         self.correctPosition = cutPiece.correctPosition
         self.neighbors = cutPiece.neighbors
         self.piecePath = cutPiece.path
+        self.gridCellSize = cutPiece.pieceSize
+
+        // Compute the grid cell center in SKNode local coordinates.
+        // The texture is rendered by TextureClipper with an offset to account for
+        // tabs extending into negative path coordinates. The SKSpriteNode centers
+        // the texture on its anchor point (0.5, 0.5), so local (0,0) = bounding box center.
+        // We need the grid cell center, which may differ due to asymmetric tab extensions.
+        let pathBounds = cutPiece.path.boundingBoxOfPath
+        let nodeSize = pathBounds.size
+        let offsetX = -min(0, pathBounds.minX)
+        let offsetY = -min(0, pathBounds.minY)
+        // Grid cell center in the texture image coordinate system (UIKit, Y-down)
+        let gridCenterInImageX = offsetX + cutPiece.pieceSize.width / 2
+        let gridCenterInImageY = offsetY + cutPiece.pieceSize.height / 2
+        // Convert to SKNode local coordinates (Y-up, centered on bounding box)
+        self.gridCenterLocal = CGPoint(
+            x: gridCenterInImageX - nodeSize.width / 2,
+            y: nodeSize.height / 2 - gridCenterInImageY
+        )
 
         let texture: SKTexture?
         if let image = cutPiece.texture {
@@ -33,8 +60,7 @@ class PuzzlePieceNode: SKSpriteNode {
             texture = nil
         }
 
-        let size = cutPiece.path.boundingBoxOfPath.size
-        super.init(texture: texture, color: .clear, size: size)
+        super.init(texture: texture, color: .clear, size: nodeSize)
 
         self.name = "piece_\(pieceID)"
         self.isUserInteractionEnabled = false  // Handled by PuzzleScene

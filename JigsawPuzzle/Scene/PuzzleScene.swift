@@ -122,9 +122,9 @@ class PuzzleScene: SKScene {
                 // Verify the group is near the correct board position
                 // Check any piece's world position against its correct position
                 if let anyPiece = group.pieces.first {
-                    let worldPos = anyPiece.convert(CGPoint.zero, to: self)
-                    let pieceSize = anyPiece.size
-                    let threshold = max(pieceSize.width, pieceSize.height) * 0.3
+                    let worldPos = anyPiece.convert(anyPiece.gridCenterLocal, to: self)
+                    let cellSize = anyPiece.gridCellSize
+                    let threshold = max(cellSize.width, cellSize.height) * 0.3
                     let distance = sqrt(
                         pow(worldPos.x - anyPiece.correctPosition.x, 2) +
                         pow(worldPos.y - anyPiece.correctPosition.y, 2)
@@ -198,20 +198,20 @@ class PuzzleScene: SKScene {
     private func handlePieceRelease(group: PieceGroupNode) {
         guard !group.isLockedToBoard else { return }
 
-        let pieceSize = pieceMap.values.first?.size ?? CGSize(width: 100, height: 100)
+        let cellSize = pieceMap.values.first?.gridCellSize ?? CGSize(width: 100, height: 100)
 
         // Check board lock first (for each piece in group)
         for piece in group.pieces {
-            let worldPos = piece.convert(CGPoint.zero, to: self)
+            let gridWorldPos = piece.convert(piece.gridCenterLocal, to: self)
             if snapManager.shouldBoardLock(
-                piecePosition: worldPos,
+                piecePosition: gridWorldPos,
                 correctPosition: piece.correctPosition,
                 pieceRotation: piece.rotationDegrees,
                 velocity: currentVelocity,
-                pieceSize: pieceSize
+                pieceSize: cellSize
             ) {
-                let moveX = piece.correctPosition.x - worldPos.x
-                let moveY = piece.correctPosition.y - worldPos.y
+                let moveX = piece.correctPosition.x - gridWorldPos.x
+                let moveY = piece.correctPosition.y - gridWorldPos.y
                 group.run(SKAction.moveBy(x: moveX, y: moveY, duration: 0.15)) {
                     group.lockToBoard()
                     self.updateProgress()
@@ -229,27 +229,27 @@ class PuzzleScene: SKScene {
                   let neighborGroup = groupMap[neighborID],
                   neighborGroup !== group else { continue }
 
-            let pieceWorldPos = piece.convert(CGPoint.zero, to: self)
-            let neighborWorldPos = neighborPiece.convert(CGPoint.zero, to: self)
+            let pieceGridPos = piece.convert(piece.gridCenterLocal, to: self)
+            let neighborGridPos = neighborPiece.convert(neighborPiece.gridCenterLocal, to: self)
 
-            // Calculate where the piece SHOULD be relative to neighbor
-            let targetOffset = targetOffsetForEdge(edge, pieceSize: pieceSize)
+            // Calculate where the piece SHOULD be relative to neighbor (grid cell centers)
+            let targetOffset = targetOffsetForEdge(edge, pieceSize: cellSize)
             let targetPos = CGPoint(
-                x: neighborWorldPos.x + targetOffset.x,
-                y: neighborWorldPos.y + targetOffset.y
+                x: neighborGridPos.x + targetOffset.x,
+                y: neighborGridPos.y + targetOffset.y
             )
 
             if snapManager.shouldSnap(
-                piecePosition: pieceWorldPos,
+                piecePosition: pieceGridPos,
                 targetPosition: targetPos,
                 pieceRotation: piece.rotationDegrees,
                 targetRotation: neighborPiece.rotationDegrees,
                 velocity: currentVelocity,
-                pieceSize: pieceSize
+                pieceSize: cellSize
             ) {
                 let moveOffset = CGPoint(
-                    x: targetPos.x - pieceWorldPos.x,
-                    y: targetPos.y - pieceWorldPos.y
+                    x: targetPos.x - pieceGridPos.x,
+                    y: targetPos.y - pieceGridPos.y
                 )
 
                 let snapAction = SKAction.moveBy(x: moveOffset.x, y: moveOffset.y, duration: 0.15)
