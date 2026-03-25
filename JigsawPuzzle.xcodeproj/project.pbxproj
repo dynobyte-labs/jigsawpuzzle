@@ -1,0 +1,508 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06BB5BF89236F7865C06165B /* PuzzleCutterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A761266C76F37742E47CB5B7 /* PuzzleCutterTests.swift */; };
+		1130EF668E21AB7B111A4343 /* SnapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280BCC32F097B8B9B490A1AF /* SnapManager.swift */; };
+		1661CCBBF7C305F186AFD779 /* EdgeGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8FC81F4BAE592268255F10 /* EdgeGeneratorTests.swift */; };
+		1860CFDC3CA1741FBF24A640 /* PathAssemblerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E44CD1F331E8907D4DAA66 /* PathAssemblerTests.swift */; };
+		2DECB3CAC504B57DA25B706B /* GridComputer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F3A08E182429F3D31A5FBD /* GridComputer.swift */; };
+		4271D98FEC0D5657F4D18FB6 /* PieceGroupNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695C82D43C57E0C18715249 /* PieceGroupNode.swift */; };
+		601A2A20CB4F1F94A71F4E40 /* PuzzleCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC2F073AA8816C947AD8FC /* PuzzleCatalog.swift */; };
+		7C7B4502E762D42813F03AE3 /* GridComputerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F844492B5B559145ACEA00E9 /* GridComputerTests.swift */; };
+		8E46B06E1642D4D484C9E36A /* VictoryOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74034AF86EF725638DE37F52 /* VictoryOverlayView.swift */; };
+		8F6434479A5007D8736D4CEA /* TextureClipperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06678621120FD59E5BF83132 /* TextureClipperTests.swift */; };
+		91081F5ACE161E6C8168925B /* SnapManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45A1812AD1CE7E8275A129A /* SnapManagerTests.swift */; };
+		9A3A1AAB09FABBB951D9795E /* PuzzleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F193F3B19CB7803F0A1CEC3F /* PuzzleScene.swift */; };
+		9DA29D0C50F388CAFC627C17 /* PuzzlePieceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB82C5C1CAE9F0C9910C953 /* PuzzlePieceNode.swift */; };
+		A41685FC3B89C30A3BE2A61A /* EdgeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05594BFE17A85486815806 /* EdgeGenerator.swift */; };
+		A46B7DE189F2A2A02A5A7690 /* PuzzleTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC4186FACB7A7796C4C6CF6 /* PuzzleTypes.swift */; };
+		A795C5DA3653CE1BAD5373C4 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D9886840609AA6E597AD18 /* HomeView.swift */; };
+		B607DF9AEBD96564BBA593EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4145561CDFB8D21066FD0290 /* Assets.xcassets */; };
+		B6BE8C4163C14299B2596950 /* PuzzleCutter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A374228BCC3B1D00464C0F7 /* PuzzleCutter.swift */; };
+		B9358AE14775A9AB215075C1 /* PuzzleContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1ABD76386F03F0C7D7FC579 /* PuzzleContainerView.swift */; };
+		BBB6AE7B5391201E11611330 /* TextureClipper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDC30AAAB4155CD7B83F788 /* TextureClipper.swift */; };
+		CA6B80656FB28E018FF3F7AD /* PathAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F0C7285817A3FE00F94BEA /* PathAssembler.swift */; };
+		EC4184CE88FC41DE46FD19C5 /* JigsawPuzzleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F4FBA582698055C801BD23 /* JigsawPuzzleApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FA40DF86DF2A42C914048FFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCA0DABF4F004F5E54802B64 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 858B86355077C3EDAC67BD9E;
+			remoteInfo = JigsawPuzzle;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		06678621120FD59E5BF83132 /* TextureClipperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureClipperTests.swift; sourceTree = "<group>"; };
+		0A05594BFE17A85486815806 /* EdgeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeGenerator.swift; sourceTree = "<group>"; };
+		280BCC32F097B8B9B490A1AF /* SnapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapManager.swift; sourceTree = "<group>"; };
+		3695C82D43C57E0C18715249 /* PieceGroupNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceGroupNode.swift; sourceTree = "<group>"; };
+		4145561CDFB8D21066FD0290 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		47F4FBA582698055C801BD23 /* JigsawPuzzleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JigsawPuzzleApp.swift; sourceTree = "<group>"; };
+		50E44CD1F331E8907D4DAA66 /* PathAssemblerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathAssemblerTests.swift; sourceTree = "<group>"; };
+		51F0C7285817A3FE00F94BEA /* PathAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathAssembler.swift; sourceTree = "<group>"; };
+		5BFC2F073AA8816C947AD8FC /* PuzzleCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleCatalog.swift; sourceTree = "<group>"; };
+		5DC4186FACB7A7796C4C6CF6 /* PuzzleTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleTypes.swift; sourceTree = "<group>"; };
+		74034AF86EF725638DE37F52 /* VictoryOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VictoryOverlayView.swift; sourceTree = "<group>"; };
+		8A374228BCC3B1D00464C0F7 /* PuzzleCutter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleCutter.swift; sourceTree = "<group>"; };
+		8BBD1CBC7050EF1B66CE62D8 /* JigsawPuzzleTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = JigsawPuzzleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		917AA0A1B18CFA6EEC600654 /* JigsawPuzzle.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = JigsawPuzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1ABD76386F03F0C7D7FC579 /* PuzzleContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleContainerView.swift; sourceTree = "<group>"; };
+		A45A1812AD1CE7E8275A129A /* SnapManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapManagerTests.swift; sourceTree = "<group>"; };
+		A761266C76F37742E47CB5B7 /* PuzzleCutterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleCutterTests.swift; sourceTree = "<group>"; };
+		ACB82C5C1CAE9F0C9910C953 /* PuzzlePieceNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzlePieceNode.swift; sourceTree = "<group>"; };
+		BE8FC81F4BAE592268255F10 /* EdgeGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeGeneratorTests.swift; sourceTree = "<group>"; };
+		D5D9886840609AA6E597AD18 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		DDDC30AAAB4155CD7B83F788 /* TextureClipper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureClipper.swift; sourceTree = "<group>"; };
+		E8F3A08E182429F3D31A5FBD /* GridComputer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridComputer.swift; sourceTree = "<group>"; };
+		E9AED6E67554894F4A8152AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F193F3B19CB7803F0A1CEC3F /* PuzzleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleScene.swift; sourceTree = "<group>"; };
+		F844492B5B559145ACEA00E9 /* GridComputerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridComputerTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2F9B8ECC9ACA39E861377CCE /* JigsawPuzzle */ = {
+			isa = PBXGroup;
+			children = (
+				4145561CDFB8D21066FD0290 /* Assets.xcassets */,
+				E9AED6E67554894F4A8152AB /* Info.plist */,
+				47F4FBA582698055C801BD23 /* JigsawPuzzleApp.swift */,
+				9FAD255317AB258BEA3B8DCE /* Engine */,
+				E5A5B31C8B9C608DA21AFD5B /* Models */,
+				9DD0F3831C430E00778318BB /* Scene */,
+				3AF0C3900114ABA4FE9FE4B6 /* Views */,
+			);
+			path = JigsawPuzzle;
+			sourceTree = "<group>";
+		};
+		383CF1DFC36089DA0239F0FE /* JigsawPuzzleTests */ = {
+			isa = PBXGroup;
+			children = (
+				BE8FC81F4BAE592268255F10 /* EdgeGeneratorTests.swift */,
+				F844492B5B559145ACEA00E9 /* GridComputerTests.swift */,
+				50E44CD1F331E8907D4DAA66 /* PathAssemblerTests.swift */,
+				A761266C76F37742E47CB5B7 /* PuzzleCutterTests.swift */,
+				A45A1812AD1CE7E8275A129A /* SnapManagerTests.swift */,
+				06678621120FD59E5BF83132 /* TextureClipperTests.swift */,
+			);
+			path = JigsawPuzzleTests;
+			sourceTree = "<group>";
+		};
+		3AF0C3900114ABA4FE9FE4B6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D5D9886840609AA6E597AD18 /* HomeView.swift */,
+				A1ABD76386F03F0C7D7FC579 /* PuzzleContainerView.swift */,
+				74034AF86EF725638DE37F52 /* VictoryOverlayView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5576593D34DF5D25F49385A8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				917AA0A1B18CFA6EEC600654 /* JigsawPuzzle.app */,
+				8BBD1CBC7050EF1B66CE62D8 /* JigsawPuzzleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		82CB700F0E1721591BD1E47D = {
+			isa = PBXGroup;
+			children = (
+				2F9B8ECC9ACA39E861377CCE /* JigsawPuzzle */,
+				383CF1DFC36089DA0239F0FE /* JigsawPuzzleTests */,
+				5576593D34DF5D25F49385A8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9DD0F3831C430E00778318BB /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				3695C82D43C57E0C18715249 /* PieceGroupNode.swift */,
+				ACB82C5C1CAE9F0C9910C953 /* PuzzlePieceNode.swift */,
+				F193F3B19CB7803F0A1CEC3F /* PuzzleScene.swift */,
+			);
+			path = Scene;
+			sourceTree = "<group>";
+		};
+		9FAD255317AB258BEA3B8DCE /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				0A05594BFE17A85486815806 /* EdgeGenerator.swift */,
+				E8F3A08E182429F3D31A5FBD /* GridComputer.swift */,
+				51F0C7285817A3FE00F94BEA /* PathAssembler.swift */,
+				8A374228BCC3B1D00464C0F7 /* PuzzleCutter.swift */,
+				280BCC32F097B8B9B490A1AF /* SnapManager.swift */,
+				DDDC30AAAB4155CD7B83F788 /* TextureClipper.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		E5A5B31C8B9C608DA21AFD5B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5BFC2F073AA8816C947AD8FC /* PuzzleCatalog.swift */,
+				5DC4186FACB7A7796C4C6CF6 /* PuzzleTypes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8461A5FE398138B2E94BB879 /* JigsawPuzzleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D52A792FDA210246B1F1C022 /* Build configuration list for PBXNativeTarget "JigsawPuzzleTests" */;
+			buildPhases = (
+				F774B09E3ABB3F6AD205C239 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E51AD5AA4BFCFAC96E71D1F2 /* PBXTargetDependency */,
+			);
+			name = JigsawPuzzleTests;
+			packageProductDependencies = (
+			);
+			productName = JigsawPuzzleTests;
+			productReference = 8BBD1CBC7050EF1B66CE62D8 /* JigsawPuzzleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		858B86355077C3EDAC67BD9E /* JigsawPuzzle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB2DE4784C6646AA61DFD25E /* Build configuration list for PBXNativeTarget "JigsawPuzzle" */;
+			buildPhases = (
+				67EE2729494A84A45BAD4446 /* Sources */,
+				0FFF618656EB9AF4163FAFF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JigsawPuzzle;
+			packageProductDependencies = (
+			);
+			productName = JigsawPuzzle;
+			productReference = 917AA0A1B18CFA6EEC600654 /* JigsawPuzzle.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCA0DABF4F004F5E54802B64 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 10C91A1DD53A2B436E0EBD8E /* Build configuration list for PBXProject "JigsawPuzzle" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 82CB700F0E1721591BD1E47D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5576593D34DF5D25F49385A8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				858B86355077C3EDAC67BD9E /* JigsawPuzzle */,
+				8461A5FE398138B2E94BB879 /* JigsawPuzzleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0FFF618656EB9AF4163FAFF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B607DF9AEBD96564BBA593EC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		67EE2729494A84A45BAD4446 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A41685FC3B89C30A3BE2A61A /* EdgeGenerator.swift in Sources */,
+				2DECB3CAC504B57DA25B706B /* GridComputer.swift in Sources */,
+				A795C5DA3653CE1BAD5373C4 /* HomeView.swift in Sources */,
+				EC4184CE88FC41DE46FD19C5 /* JigsawPuzzleApp.swift in Sources */,
+				CA6B80656FB28E018FF3F7AD /* PathAssembler.swift in Sources */,
+				4271D98FEC0D5657F4D18FB6 /* PieceGroupNode.swift in Sources */,
+				601A2A20CB4F1F94A71F4E40 /* PuzzleCatalog.swift in Sources */,
+				B9358AE14775A9AB215075C1 /* PuzzleContainerView.swift in Sources */,
+				B6BE8C4163C14299B2596950 /* PuzzleCutter.swift in Sources */,
+				9DA29D0C50F388CAFC627C17 /* PuzzlePieceNode.swift in Sources */,
+				9A3A1AAB09FABBB951D9795E /* PuzzleScene.swift in Sources */,
+				A46B7DE189F2A2A02A5A7690 /* PuzzleTypes.swift in Sources */,
+				1130EF668E21AB7B111A4343 /* SnapManager.swift in Sources */,
+				BBB6AE7B5391201E11611330 /* TextureClipper.swift in Sources */,
+				8E46B06E1642D4D484C9E36A /* VictoryOverlayView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F774B09E3ABB3F6AD205C239 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1661CCBBF7C305F186AFD779 /* EdgeGeneratorTests.swift in Sources */,
+				7C7B4502E762D42813F03AE3 /* GridComputerTests.swift in Sources */,
+				1860CFDC3CA1741FBF24A640 /* PathAssemblerTests.swift in Sources */,
+				06BB5BF89236F7865C06165B /* PuzzleCutterTests.swift in Sources */,
+				91081F5ACE161E6C8168925B /* SnapManagerTests.swift in Sources */,
+				8F6434479A5007D8736D4CEA /* TextureClipperTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E51AD5AA4BFCFAC96E71D1F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 858B86355077C3EDAC67BD9E /* JigsawPuzzle */;
+			targetProxy = FA40DF86DF2A42C914048FFB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		101D1A8BA44787067ED1F7FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JigsawPuzzle/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigsawpuzzle.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3EBCB0AF05CC51BA0DF9B6A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		41FEA579B7419AEFDE52D693 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigsawpuzzle.JigsawPuzzleTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JigsawPuzzle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JigsawPuzzle";
+			};
+			name = Debug;
+		};
+		5B5DABC544CC0733227D0D43 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigsawpuzzle.JigsawPuzzleTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JigsawPuzzle.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/JigsawPuzzle";
+			};
+			name = Release;
+		};
+		9859CA842A1167318D001F9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		D471E03436D6788D9612D048 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JigsawPuzzle/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigsawpuzzle.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		10C91A1DD53A2B436E0EBD8E /* Build configuration list for PBXProject "JigsawPuzzle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EBCB0AF05CC51BA0DF9B6A3 /* Debug */,
+				9859CA842A1167318D001F9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CB2DE4784C6646AA61DFD25E /* Build configuration list for PBXNativeTarget "JigsawPuzzle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D471E03436D6788D9612D048 /* Debug */,
+				101D1A8BA44787067ED1F7FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D52A792FDA210246B1F1C022 /* Build configuration list for PBXNativeTarget "JigsawPuzzleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41FEA579B7419AEFDE52D693 /* Debug */,
+				5B5DABC544CC0733227D0D43 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FCA0DABF4F004F5E54802B64 /* Project object */;
+}
