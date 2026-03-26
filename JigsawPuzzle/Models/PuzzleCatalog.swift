@@ -15,6 +15,12 @@ struct PuzzleCatalog {
         PuzzleInfo(id: "temple", title: "Ancient Temple", category: "Architecture", imageName: "puzzle_temple"),
         PuzzleInfo(id: "safari", title: "Safari Wildlife", category: "Animals", imageName: "puzzle_safari"),
         PuzzleInfo(id: "abstract", title: "Abstract Art", category: "Art", imageName: "puzzle_abstract"),
+        PuzzleInfo(id: "castle", title: "Clifftop Castle", category: "Fantasy", imageName: "puzzle_castle"),
+        PuzzleInfo(id: "aurora", title: "Northern Lights", category: "Landscape", imageName: "puzzle_aurora"),
+        PuzzleInfo(id: "market", title: "Night Market", category: "Travel", imageName: "puzzle_market"),
+        PuzzleInfo(id: "coral", title: "Coral Reef", category: "Underwater", imageName: "puzzle_coral"),
+        PuzzleInfo(id: "volcano", title: "Erupting Volcano", category: "Nature", imageName: "puzzle_volcano"),
+        PuzzleInfo(id: "garden", title: "Zen Garden", category: "Travel", imageName: "puzzle_garden"),
     ]
 
     /// Generate a placeholder gradient image for a puzzle when asset is not available.
