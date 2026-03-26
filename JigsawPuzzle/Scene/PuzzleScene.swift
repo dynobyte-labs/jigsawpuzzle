@@ -33,6 +33,9 @@ class PuzzleScene: SKScene {
     private var isPanning: Bool = false
     private var initialPinchScale: CGFloat = 1.0
 
+    // Two-finger rotation state (independent of touch system)
+    private var rotatingGroup: PieceGroupNode?
+
     // Ghost outline
     private var ghostNode: SKSpriteNode?
 
@@ -94,8 +97,9 @@ class PuzzleScene: SKScene {
             let randomY = CGFloat.random(in: (puzzleArea.minY - scatterMargin)...(puzzleArea.maxY + scatterMargin))
             group.position = CGPoint(x: randomX, y: randomY)
 
-            // Random rotation (0, 90, 180, 270)
+            // Random rotation (0, 90, 180, 270) — applied to group, tracked on piece
             let randomRotation = CGFloat([0, 90, 180, 270].randomElement()!)
+            group.zRotation = randomRotation * .pi / 180
             pieceNode.rotationDegrees = randomRotation
 
             addChild(group)
@@ -119,8 +123,6 @@ class PuzzleScene: SKScene {
         if unlockedGroups.count == 1 {
             let group = unlockedGroups[0]
             if group.pieces.count == totalPieces {
-                // Verify the group is near the correct board position
-                // Check any piece's world position against its correct position
                 if let anyPiece = group.pieces.first {
                     let worldPos = anyPiece.convert(anyPiece.gridCenterLocal, to: self)
                     let cellSize = anyPiece.gridCellSize
@@ -193,6 +195,19 @@ class PuzzleScene: SKScene {
         return emitter
     }
 
+    // MARK: - Rotation Helpers
+
+    /// Snap a group's rotation to the nearest 90 degrees and update piece tracking.
+    private func snapGroupRotation(_ group: PieceGroupNode) {
+        let currentDegrees = group.zRotation * 180 / .pi
+        let nearest90 = (currentDegrees / 90).rounded() * 90
+        let normalized = nearest90.truncatingRemainder(dividingBy: 360)
+        group.zRotation = normalized * .pi / 180
+        for piece in group.pieces {
+            piece.rotationDegrees = normalized
+        }
+    }
+
     // MARK: - Snap Logic Integration
 
     private func handlePieceRelease(group: PieceGroupNode) {
@@ -212,6 +227,8 @@ class PuzzleScene: SKScene {
             ) {
                 let moveX = piece.correctPosition.x - gridWorldPos.x
                 let moveY = piece.correctPosition.y - gridWorldPos.y
+                // Reset group rotation to 0 for board lock (piece is correctly oriented)
+                group.zRotation = 0
                 group.run(SKAction.moveBy(x: moveX, y: moveY, duration: 0.15)) {
                     group.lockToBoard()
                     self.updateProgress()
@@ -379,9 +396,8 @@ extension PuzzleScene {
         if let group = activePieceGroup {
             group.putDown()
 
-            for piece in group.pieces {
-                piece.snapRotation()
-            }
+            // Snap group rotation to nearest 90 degrees before checking snap logic
+            snapGroupRotation(group)
 
             handlePieceRelease(group: group)
             activePieceGroup = nil
@@ -400,15 +416,17 @@ extension PuzzleScene {
 
 // MARK: - Gesture Recognizers
 
-extension PuzzleScene {
+extension PuzzleScene: UIGestureRecognizerDelegate {
 
     func setupGestureRecognizers() {
         guard let view = view else { return }
 
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
+        pinch.delegate = self
         view.addGestureRecognizer(pinch)
 
         let rotation = UIRotationGestureRecognizer(target: self, action: #selector(handleRotation(_:)))
+        rotation.delegate = self
         view.addGestureRecognizer(rotation)
 
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
@@ -416,7 +434,18 @@ extension PuzzleScene {
         view.addGestureRecognizer(doubleTap)
     }
 
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Allow pinch (camera zoom) and rotation (piece rotate) to work simultaneously
+        let isPinch = gestureRecognizer is UIPinchGestureRecognizer || otherGestureRecognizer is UIPinchGestureRecognizer
+        let isRotation = gestureRecognizer is UIRotationGestureRecognizer || otherGestureRecognizer is UIRotationGestureRecognizer
+        return isPinch && isRotation
+    }
+
     @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {
+        // Only zoom camera when NOT holding a piece
+        guard activePieceGroup == nil else { return }
+
         switch gesture.state {
         case .began:
             initialPinchScale = cameraNode.xScale
@@ -430,25 +459,51 @@ extension PuzzleScene {
     }
 
     @objc private func handleRotation(_ gesture: UIRotationGestureRecognizer) {
-        guard let group = activePieceGroup else { return }
-
         switch gesture.state {
+        case .began:
+            // Find the piece under the gesture's midpoint
+            guard let view = view else { return }
+            let viewLocation = gesture.location(in: view)
+            let sceneLocation = convertPoint(fromView: viewLocation)
+            // Use activePieceGroup if already selected, otherwise find one
+            if let group = activePieceGroup {
+                rotatingGroup = group
+            } else {
+                for node in nodes(at: sceneLocation) {
+                    if let piece = node as? PuzzlePieceNode,
+                       let group = piece.parent as? PieceGroupNode,
+                       !group.isLockedToBoard {
+                        rotatingGroup = group
+                        group.liftUp()
+                        break
+                    }
+                }
+            }
+
         case .changed:
-            // Rotate the group node itself so all pieces maintain their relative positions
+            guard let group = rotatingGroup else { return }
             group.zRotation -= gesture.rotation
             gesture.rotation = 0
-        case .ended:
-            // Snap group rotation to nearest 90 degrees
+
+        case .ended, .cancelled:
+            guard let group = rotatingGroup else { return }
+            // Snap to nearest 90 degrees
             let currentDegrees = group.zRotation * 180 / .pi
             let nearest90 = (currentDegrees / 90).rounded() * 90
-            let targetRadians = nearest90 * .pi / 180
+            let normalized = nearest90.truncatingRemainder(dividingBy: 360)
+            let targetRadians = normalized * .pi / 180
             let snapAction = SKAction.rotate(toAngle: targetRadians, duration: 0.2, shortestUnitArc: true)
             snapAction.timingMode = .easeOut
             group.run(snapAction)
-            // Update piece rotation tracking to match group rotation
             for piece in group.pieces {
-                piece.rotationDegrees = nearest90
+                piece.rotationDegrees = normalized
             }
+            // If this group wasn't from touch selection, put it down
+            if activePieceGroup !== group {
+                group.putDown()
+            }
+            rotatingGroup = nil
+
         default:
             break
         }
@@ -464,15 +519,17 @@ extension PuzzleScene {
             if let piece = node as? PuzzlePieceNode,
                let group = piece.parent as? PieceGroupNode,
                !group.isLockedToBoard {
-                // Rotate the group node 90 degrees clockwise
+                // Rotate the group 90 degrees clockwise
                 let currentDegrees = group.zRotation * 180 / .pi
                 let targetDegrees = currentDegrees - 90
                 let targetRadians = targetDegrees * .pi / 180
                 let rotateAction = SKAction.rotate(toAngle: targetRadians, duration: 0.15, shortestUnitArc: true)
                 rotateAction.timingMode = .easeOut
                 group.run(rotateAction)
+                // Update tracking (group handles visual rotation, not pieces)
+                let normalized = targetDegrees.truncatingRemainder(dividingBy: 360)
                 for p in group.pieces {
-                    p.rotationDegrees += 90
+                    p.rotationDegrees = normalized
                 }
                 generateHaptic(style: .light)
                 return

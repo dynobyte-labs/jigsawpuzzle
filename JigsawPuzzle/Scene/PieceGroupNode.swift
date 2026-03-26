@@ -34,17 +34,26 @@ class PieceGroupNode: SKNode {
 
     /// Merge another group into this one.
     /// Reparents all pieces from the other group, adjusting positions.
+    /// Both groups must have matching rotation (enforced by snap logic).
     func merge(otherGroup: PieceGroupNode) {
-        let offset = CGPoint(
+        // Scene-space offset between the two groups
+        let sceneOffset = CGPoint(
             x: otherGroup.position.x - position.x,
             y: otherGroup.position.y - position.y
+        )
+        // Convert to this group's local coordinate space (accounting for rotation)
+        let c = cos(-zRotation)
+        let s = sin(-zRotation)
+        let localOffset = CGPoint(
+            x: sceneOffset.x * c - sceneOffset.y * s,
+            y: sceneOffset.x * s + sceneOffset.y * c
         )
 
         let otherPieces = otherGroup.pieces
         for piece in otherPieces {
             let localPos = CGPoint(
-                x: piece.position.x + offset.x,
-                y: piece.position.y + offset.y
+                x: piece.position.x + localOffset.x,
+                y: piece.position.y + localOffset.y
             )
             piece.removeFromParent()
             piece.position = localPos
